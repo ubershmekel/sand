@@ -6,6 +6,7 @@ import HavokPhysics from "@babylonjs/havok";
 
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+<div id="fps"></div>
 <canvas id="renderCanvas" style="width:100%;height:100%;touch-action:none;"></canvas>
 `
 
@@ -49,23 +50,34 @@ async function init() {
     // var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
     // sphere.position.y = 4;
     // var sphereAggregate = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.75 }, scene);
+    const sandy = new BABYLON.StandardMaterial("sandy", scene);
+    sandy.diffuseColor = BABYLON.Color3.FromHexString("#cda34d");
+    const tub = new BABYLON.StandardMaterial("tub", scene);
+    tub.diffuseColor = BABYLON.Color3.FromHexString("#3d3d9d");
+    //  new BABYLON.Color3(0.7, 0.7, 0.1);
+
     for (let i = 0; i < 1000; i++) {
       // const sphere = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.75 }, scene);
-      const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
+      const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 16 }, scene);
+      sphere.material = sandy;
       sphere.position.x = Math.random() * 2;
       sphere.position.z = Math.random() * 2;
-      sphere.position.y = i * 0.1 + 4;
-      const spherePhysic = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.05 }, scene);
+      sphere.position.y = 0.5 + Math.random() * 2;
+      // sphere.position.y = i * 0.1 + 4;
+      const spherePhysics = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.05 }, scene);
     }
 
     const result = await BABYLON.SceneLoader.ImportMeshAsync(['Cylinder'], "https://raw.githubusercontent.com/thgala/public-assets/main/", "c1.babylon", scene);
     const element = result.meshes[0];
-    element.position.y = 1;
+    element.material = tub;
+    element.position.x = 0.5
+    element.position.z = 0.5
+    element.position.y = 0.7;
     const cylScale = 15;
     element.scaling.x = cylScale;
     element.scaling.y = 1;
     element.scaling.z = cylScale;
-    const cylinderPhysics = new BABYLON.PhysicsAggregate(element, BABYLON.PhysicsShapeType.MESH, { mass: 100, restitution: 0.15 }, scene);
+    const cylinderPhysics = new BABYLON.PhysicsAggregate(element, BABYLON.PhysicsShapeType.MESH, { mass: 1000, restitution: 0.15 }, scene);
 
     // const cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 2, diameterTop: 2, diameterBottom: 2, tessellation: 8, subdivisions: 8 }, scene);
 
@@ -86,11 +98,16 @@ async function init() {
   // run the render loop
   engine.runRenderLoop(function () {
     scene.render();
+    divFps.innerHTML = engine.getFps().toFixed() + " fps";
   });
   // the canvas/window resize event handler
   window.addEventListener('resize', function () {
     engine.resize();
   });
+
+  let divFps = document.getElementById("fps") as HTMLElement;
+
+
 }
 
 init();
