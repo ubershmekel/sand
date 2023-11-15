@@ -4,4 +4,5 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ['@babylonjs/havok'],
     },
+    base: '/sand/',
 });

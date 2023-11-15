@@ -64,7 +64,7 @@ async function init() {
       sphere.position.z = Math.random() * 2;
       sphere.position.y = 0.5 + Math.random() * 2;
       // sphere.position.y = i * 0.1 + 4;
-      const spherePhysics = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.05 }, scene);
+      new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.05 }, scene);
     }
 
     const result = await BABYLON.SceneLoader.ImportMeshAsync(['Cylinder'], "https://raw.githubusercontent.com/thgala/public-assets/main/", "c1.babylon", scene);
@@ -77,14 +77,14 @@ async function init() {
     element.scaling.x = cylScale;
     element.scaling.y = 1;
     element.scaling.z = cylScale;
-    const cylinderPhysics = new BABYLON.PhysicsAggregate(element, BABYLON.PhysicsShapeType.MESH, { mass: 1000, restitution: 0.15 }, scene);
+    new BABYLON.PhysicsAggregate(element, BABYLON.PhysicsShapeType.MESH, { mass: 1000, restitution: 0.15 }, scene);
 
     // const cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 2, diameterTop: 2, diameterBottom: 2, tessellation: 8, subdivisions: 8 }, scene);
 
     // Create a static box shape.
     // Our built-in 'ground' shape.
     var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 50, height: 50 }, scene);
-    var groundAggregate = new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
+    new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
 
     return scene;
   };
