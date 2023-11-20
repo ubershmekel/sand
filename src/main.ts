@@ -12,18 +12,62 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-async function init() {
-  // Get the canvas DOM element
-  let canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
-  // Load the 3D engine
-  var engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
-  // CreateScene function that creates and return the scene
+class Game {
+  comb!: BABYLON.Mesh;
+  combP!: BABYLON.PhysicsAggregate;
+  engine!: BABYLON.Engine;
+  canvas!: HTMLCanvasElement;
+  physicsPlugin!: BABYLON.HavokPlugin;
 
-  // var scene = new BABYLON.Scene(engine);
-  var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
-  var createScene = async function () {
+  async init() {
+    // Get the canvas DOM element
+    this.canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
+    // Load the 3D engine
+    this.engine = new BABYLON.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+    // CreateScene function that creates and return the scene
+
+    // var scene = new BABYLON.Scene(engine);
+    var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
+
+    // const physicsPlugin = new BABYLON.HavokPlugin();
+    const havok = await HavokPhysics();
+    this.physicsPlugin = new BABYLON.HavokPlugin(true, havok);
+    const scene = await this.createScene();
+    scene.enablePhysics(gravityVector, this.physicsPlugin);
+
+    // run the render loop
+    this.engine.runRenderLoop(() => {
+      scene.render();
+      divFps.innerHTML = this.engine.getFps().toFixed() + " fps";
+    });
+
+    // the canvas/window resize event handler
+    window.addEventListener('resize', () => {
+      this.engine.resize();
+    });
+
+    let divFps = document.getElementById("fps") as HTMLElement;
+
+    scene.registerBeforeRender(() => {
+      this.beforeRender();
+    });
+  }
+
+  beforeRender() {
+    // console.log("before render", this);
+    if (!this.comb) return;
+    // console.log("combing")
+    this.comb.position.x = Math.sin(Date.now() / 1000) * 1.5 + .5;
+    // this.comb.position.y = Math.sin(Date.now() / 1000) * .5;
+    this.comb.position.z = Math.cos(Date.now() / 1000) * 1.5;
+    // this.combP.body.setLinearVelocity(new BABYLON.Vector3(.1, 0, 0));
+    // this.combP.transformNode.position.x = Math.sin(Date.now() / 1000) * 0.5;
+
+  }
+
+  async createScene() {
     // This creates a basic Babylon Scene object (non-mesh)
-    var scene = new BABYLON.Scene(engine);
+    var scene = new BABYLON.Scene(this.engine);
 
     // This creates and positions a free camera (non-mesh)
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -5), scene);
@@ -32,7 +76,7 @@ async function init() {
     camera.setTarget(BABYLON.Vector3.Zero());
 
     // This attaches the camera to the canvas
-    camera.attachControl(canvas, true);
+    camera.attachControl(this.canvas, true);
 
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
@@ -43,7 +87,7 @@ async function init() {
     // initialize plugin
     // var hk = new BABYLON.HavokPlugin();
     // enable physics in the scene with a gravity
-    scene.enablePhysics(new BABYLON.Vector3(0, -9.8, 0), physicsPlugin);
+    scene.enablePhysics(new BABYLON.Vector3(0, -9.8, 0), this.physicsPlugin);
 
     // Create a sphere shape and the associated body. Size will be determined automatically.
     // Our built-in 'sphere' shape.
@@ -54,9 +98,11 @@ async function init() {
     sandy.diffuseColor = BABYLON.Color3.FromHexString("#cda34d");
     const tub = new BABYLON.StandardMaterial("tub", scene);
     tub.diffuseColor = BABYLON.Color3.FromHexString("#3d3d9d");
+    const reddish = new BABYLON.StandardMaterial("reddish", scene);
+    reddish.diffuseColor = BABYLON.Color3.FromHexString("#cd3d3d");
     //  new BABYLON.Color3(0.7, 0.7, 0.1);
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 1200; i++) {
       // const sphere = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.75 }, scene);
       const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 16 }, scene);
       sphere.material = sandy;
@@ -86,28 +132,20 @@ async function init() {
     var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 50, height: 50 }, scene);
     new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
 
+    // this.comb = BABYLON.MeshBuilder.CreateBox("comb", { width: 0.3, height: 3, depth: 0.3 }, scene);
+    // this.combP = new BABYLON.PhysicsAggregate(this.comb, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
+    this.comb = BABYLON.MeshBuilder.CreateCylinder("comb", { diameter: 0.5, height: 3 }, scene);
+    this.combP = new BABYLON.PhysicsAggregate(this.comb, BABYLON.PhysicsShapeType.CYLINDER, { mass: 0 }, scene);
+    this.combP.body.disablePreStep = false;
+    this.comb.material = reddish;
+    console.log("the comb", this.comb);
+    console.log("this", this);
+
     return scene;
-  };
 
-  // const physicsPlugin = new BABYLON.HavokPlugin();
-  const havok = await HavokPhysics();
-  const physicsPlugin = new BABYLON.HavokPlugin(true, havok);
-  const scene = await createScene();
-  scene.enablePhysics(gravityVector, physicsPlugin);
-
-  // run the render loop
-  engine.runRenderLoop(function () {
-    scene.render();
-    divFps.innerHTML = engine.getFps().toFixed() + " fps";
-  });
-  // the canvas/window resize event handler
-  window.addEventListener('resize', function () {
-    engine.resize();
-  });
-
-  let divFps = document.getElementById("fps") as HTMLElement;
-
-
+  }
 }
 
-init();
+
+const game = new Game();
+game.init();
