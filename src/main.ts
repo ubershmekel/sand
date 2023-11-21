@@ -1,4 +1,4 @@
-// import './style.css'
+import './style.css'
 
 import * as BABYLON from 'babylonjs';
 
@@ -7,7 +7,7 @@ import HavokPhysics from "@babylonjs/havok";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <div id="fps"></div>
-<canvas id="renderCanvas" style="width:100%;height:100%;touch-action:none;"></canvas>
+<canvas id="renderCanvas" ></canvas>
 `
 
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
