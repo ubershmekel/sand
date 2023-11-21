@@ -95,7 +95,9 @@ class Game {
     // sphere.position.y = 4;
     // var sphereAggregate = new BABYLON.PhysicsAggregate(sphere, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution: 0.75 }, scene);
     const sandy = new BABYLON.StandardMaterial("sandy", scene);
-    sandy.diffuseColor = BABYLON.Color3.FromHexString("#cda34d");
+    // sandy.diffuseColor = BABYLON.Color3.FromHexString("#cda34d");
+    sandy.diffuseTexture = new BABYLON.Texture("14-grain-sand-seamless.jpg", scene);
+    sandy.specularColor = BABYLON.Color3.FromHexString("#1d1d1d");
     const tubMaterial = new BABYLON.StandardMaterial("tub", scene);
     tubMaterial.diffuseColor = BABYLON.Color3.FromHexString("#3d3d9d");
     const reddish = new BABYLON.StandardMaterial("reddish", scene);
