@@ -1,13 +1,44 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sand pit simulation</title>
+
+  <!--  Essential META Tags -->
+  <meta property="og:title" content="Sand pit simulation">
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="sand-balls.png">
+  <meta property="og:url" content="https://ubershmekel.github.io/sand/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!--  Non-Essential, But Recommended -->
+  <meta property="og:description" content="A 3D simulation of a ball pit with a comb circling through it.">
+  <meta property="og:site_name" content="Sand balls">
+  <meta name="twitter:image:alt" content="Sand balls simulation">
+
+  <!--  Non-Essential, But Required for Analytics -->
+  <meta name="twitter:site" content="@ubershmekel">
+
+  <!--  Google Analytics -->
+  <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    try {
+      var pageTracker = _gat._getTracker("UA-4533496-22");
+      pageTracker._trackPageview();
+    } catch (err) { }
+  </script>
+
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
