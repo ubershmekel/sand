@@ -23,7 +23,7 @@ class Game {
     // Get the canvas DOM element
     this.canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
     // Load the 3D engine
-    this.engine = new BABYLON.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+    this.engine = new BABYLON.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true, adaptToDeviceRatio: true });
     // CreateScene function that creates and return the scene
 
     // var scene = new BABYLON.Scene(engine);
@@ -42,8 +42,9 @@ class Game {
     });
 
     // the canvas/window resize event handler
+
     window.addEventListener('resize', () => {
-      this.engine.resize();
+      this.resizeCanvas();
     });
 
     let divFps = document.getElementById("fps") as HTMLElement;
@@ -51,6 +52,8 @@ class Game {
     scene.registerBeforeRender(() => {
       this.beforeRender();
     });
+
+    this.resizeCanvas();
   }
 
   beforeRender() {
@@ -63,6 +66,26 @@ class Game {
     // this.combP.body.setLinearVelocity(new BABYLON.Vector3(.1, 0, 0));
     // this.combP.transformNode.position.x = Math.sin(Date.now() / 1000) * 0.5;
 
+  }
+
+  resizeCanvas() {
+    this.engine.resize();
+
+    // Lookup the size the browser is displaying the canvas in CSS pixels.
+    const displayWidth = window.innerWidth;
+    const displayHeight = window.innerHeight;
+
+    // Check if the canvas is not the same size.
+    const needResize = this.canvas.width !== displayWidth ||
+      this.canvas.height !== displayHeight;
+
+    if (needResize) {
+      console.log(`resizing canvas from ${this.canvas.width} x ${this.canvas.height} to ${displayWidth} x ${displayHeight}`);
+
+      // Make the canvas the same size
+      this.canvas.width = displayWidth;
+      this.canvas.height = displayHeight;
+    }
   }
 
   async createScene() {
