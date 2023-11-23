@@ -9,7 +9,7 @@ import HavokPhysics from "@babylonjs/havok";
 // `
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-document.getElementById("hide-button")!.addEventListener("click", (ev: MouseEvent) => {
+document.getElementById("hide-button")!.addEventListener("click", () => {
   document.querySelector(".top-text")?.classList.add("hidden");
 });
 
