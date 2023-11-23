@@ -1,7 +1,7 @@
 # Sandy simulation
 
 I was inspired by
-https://www.reddit.com/r/oddlysatisfying/comments/17re1dd/i_thought_it_was_satisfying_to_watch_the_hole_get/
+[reddit post](https://www.reddit.com/r/oddlysatisfying/comments/17re1dd/i_thought_it_was_satisfying_to_watch_the_hole_get/)
 to make a simulation of a sand pit with a comb going through it.
 
 The initial idea that I built here uses the Havok physics engine and BabylonJS
